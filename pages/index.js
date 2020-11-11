@@ -1,65 +1,63 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+import { getDocHierarchy, getDocs } from "utils/get-docs";
 
-export default function Home() {
+import Header from '../components/Header';
+import SideBar from '../components/SideBar';
+import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Content from 'components/Content';
+import { Container } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  root: {
+    display: 'flex',
+  },
+
+}));
+
+export default function IndexPage({ docData }) {
+  const classes = useStyles();
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      <CssBaseline></CssBaseline>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <Header></Header>
+      <div className={classes.root}>
+        
+          <SideBar docData={docData}></SideBar>
+          {/* <h1>My Cool Docs</h1>
+            {docData.map((data) => (
+                <Link href={`/docs/[slug]`} as={`/docs/${data.slug}`}>
+                    <a>{data.frontMatter.title}</a>
+                </Link>
+            ))} */}
+          <Content></Content>
+      </div>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+    </>
   )
+}
+
+export async function getStaticProps() {
+  const docList = getDocs();
+  const docData = docList.map((doc) => {
+    const content = fs.readFileSync(doc, 'utf8')
+    const fileName = path.basename(doc);
+    const hierarchy = getDocHierarchy(doc);
+    return {
+      slug: fileName.replace(/\.mdx/, ''),
+      content,
+      frontMatter: matter(content).data,
+      hierarchy,
+      pathToDoc: hierarchy.join("/")
+    }
+  })
+  return { props: { docData } }
 }
