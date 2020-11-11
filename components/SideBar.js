@@ -9,9 +9,8 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
+import DescriptionIcon from '@material-ui/icons/Description';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 const drawerWidth = 350;
 
 const useStyles = makeStyles((theme) => ({
@@ -56,10 +55,10 @@ export default function SideBar({ docData }) {
         <div className={classes.drawerContainer}>
           <List>
             {docData?.map((data, index) => (
-              <ListItem button key={data.slug}>
+              <ListItem button key={data.title}>
                 <Link href={`/docs/[slug]`} as={`/docs/${data.slug}`}>
                   <a className={classes.link}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemIcon><DescriptionIcon/></ListItemIcon>
                     <ListItemText primary={data.slug} />
                   </a>
                 </Link>

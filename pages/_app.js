@@ -1,9 +1,18 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import theme from '../components/theme';
+import Header from 'components/Header';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+
+}));
+
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -12,10 +21,12 @@ function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <Head>
-        <title>My Next Docs</title>
+        <title>My Next Blog</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -23,12 +34,15 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <Header></Header>
+        <div className={classes.root}>
+          <Component {...pageProps} />
+        </div>
       </ThemeProvider>
     </React.Fragment>
   );
 }
-MyApp.propTypes={
+MyApp.propTypes = {
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   pageProps: PropTypes.object
 }

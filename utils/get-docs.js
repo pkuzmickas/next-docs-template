@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import matter from "gray-matter";
 
 const root = process.cwd();
 const contentPath = "content";
@@ -63,4 +64,22 @@ function searchForDoc(dir, docBaseName) {
 export function findDoc(docBaseName) {
     const contentRoot = path.join(root, contentPath)
     return searchForDoc(contentRoot, docBaseName);
+}
+
+export function getDocData() {
+    const docList = getDocs();
+    const docData = docList.map((doc) => {
+      const fileContents = fs.readFileSync(doc, 'utf8')
+      const fileName = path.basename(doc);
+      const hierarchy = getDocHierarchy(doc);
+      const {content, data} = matter(fileContents);
+      return {
+        slug: fileName.replace(/\.mdx/, ''),
+        content,
+        frontMatter:data,
+        hierarchy,
+        pathToDoc: hierarchy.join("/")
+      }
+    })
+    return docData;
 }
