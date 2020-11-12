@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DescriptionIcon from '@material-ui/icons/Description';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import NestedList from './NestedList';
 const drawerWidth = 350;
 
 const useStyles = makeStyles((theme) => ({
@@ -34,14 +35,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SideBar({ docData }) {
+
+
+export default function SideBar({ docTree }) {
   const classes = useStyles();
-  {/* <h1>My Cool Docs</h1>
-            {docData.map((data) => (
-                <Link href={`/docs/[slug]`} as={`/docs/${data.slug}`}>
-                    <a>{data.frontMatter.title}</a>
-                </Link>
-            ))} */}
   return (
     <div className={classes.root}>
       <Drawer
@@ -53,19 +50,7 @@ export default function SideBar({ docData }) {
       >
         <Toolbar />
         <div className={classes.drawerContainer}>
-          <List>
-            {docData?.map((data, index) => (
-              <ListItem button key={data.title}>
-                <Link href={`/docs/[slug]`} as={`/docs/${data.slug}`}>
-                  <a className={classes.link}>
-                    <ListItemIcon><DescriptionIcon/></ListItemIcon>
-                    <ListItemText primary={data.slug} />
-                  </a>
-                </Link>
-              </ListItem>
-            ))}
-            <Divider />
-          </List>
+          <NestedList docTree={docTree}></NestedList>
         </div>
       </Drawer>
     </div>

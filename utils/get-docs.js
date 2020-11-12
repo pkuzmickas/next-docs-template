@@ -68,7 +68,8 @@ export function findDoc(docBaseName) {
 
 export function getDocData() {
     const docList = getDocs();
-    const docData = docList.map((doc) => {
+    const docTree = getHierarchyTree(docList);
+    const docFileData = docList.map((doc) => {
       const fileContents = fs.readFileSync(doc, 'utf8')
       const fileName = path.basename(doc);
       const hierarchy = getDocHierarchy(doc);
@@ -81,5 +82,31 @@ export function getDocData() {
         pathToDoc: hierarchy.join("/")
       }
     })
-    return docData;
+    return {docFileData, docTree};
+}
+
+export function getHierarchyTree(docList=null) {
+    if(docList===null) {
+        docList = getDocs();
+    }
+    const hierarchyTree = {};
+    docList.forEach(doc => {
+        const hierarchy = getDocHierarchy(doc);
+        const fileName = path.basename(doc);
+        let lastNode = "root";
+        hierarchy.forEach(node => {
+            if(!hierarchyTree[lastNode]) {
+                hierarchyTree[lastNode] = [];
+            }
+            if(!hierarchyTree[node]) {
+                hierarchyTree[lastNode].push(node);
+            }
+            lastNode = node;
+        })
+        if(!hierarchyTree[lastNode]) {
+            hierarchyTree[lastNode] = [];
+        }
+        hierarchyTree[lastNode].push(fileName);
+    });
+    return hierarchyTree;
 }

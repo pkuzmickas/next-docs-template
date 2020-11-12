@@ -6,7 +6,7 @@ import Content from 'components/Content';
 export default function IndexPage({ docData }) {
   return (
     <>
-      <SideBar docData={docData}></SideBar>
+      <SideBar docTree={docData.docTree}></SideBar>
       <Content pageTitle="Welcome to Leet Documentation" text="main page"></Content>
     </>
   )

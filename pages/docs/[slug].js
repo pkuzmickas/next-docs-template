@@ -11,11 +11,8 @@ export default function DocPost({ mdxSource, frontMatter, docData }) {
   const content = hydrate(mdxSource);
   return (
     <>
-      <SideBar docData={docData}></SideBar>
+      <SideBar docData={docData.docTree}></SideBar>
       <Content pageTitle={frontMatter.title} text={content}></Content>
-
-      {/* <h1>{frontMatter.title}</h1>
-      {content} */}
     </>
   );
 }
@@ -33,12 +30,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const docData = getDocData();
-  const curDoc = docData.find(doc => doc.slug === params.slug);
-  // const docPath = findDoc(params.slug);
-  // const source = fs.readFileSync(
-  //   docPath,
-  //   "utf8"
-  // );
+  const curDoc = docData.docFileData.find(doc => doc.slug === params.slug);
   const mdxSource = await renderToString(curDoc.content);
   return { props: { mdxSource, frontMatter: curDoc.frontMatter, docData } };
 }
