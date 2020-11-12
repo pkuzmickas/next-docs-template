@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Container, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,9 +15,6 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
@@ -26,16 +24,21 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <CssBaseline></CssBaseline>
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Leet Documentation
-          </Typography>
-          <Button color="inherit">Docs</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+    <>
+      <div className={classes.root}>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Container maxWidth="lg">
+
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                Leet Documentation
+            </Typography>
+              <Button variant="contained" color="secondary">Docs</Button>
+              <Button color="inherit">About</Button>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </div>
+    </>
+  );  
 }

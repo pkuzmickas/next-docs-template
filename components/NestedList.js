@@ -3,15 +3,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import { TreeView, TreeItem } from '@material-ui/lab';
-
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import { GmailTreeView, StyledTreeItem} from "components/StyledTreeItem";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import Label from '@material-ui/icons/Label';
+import FolderIcon from '@material-ui/icons/Folder';
 const useStyles = makeStyles((theme) => ({
-    root: {
-        height: 240,
-        flexGrow: 1,
-        maxWidth: 400,
+
+    color: theme.palette.text.secondary,
+    '&:hover > $content': {
+        backgroundColor: theme.palette.action.hover,
     },
-    nested: {
-        paddingLeft: theme.spacing(4),
+    '&:focus > $content, &$selected > $content': {
+        backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
+        color: 'var(--tree-view-color)',
+    },
+    '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label': {
+        backgroundColor: 'transparent',
     },
 }));
 
@@ -19,12 +28,23 @@ function dfs(curStr, docTree) {
     const docList = docTree[curStr];
     // There are no more children
     if (!docList) {
-        return <TreeItem key={curStr} nodeId={curStr} label={curStr} />;
+        return <StyledTreeItem
+            nodeId={curStr}
+            labelText={curStr}
+            labelIcon={DescriptionOutlinedIcon}
+        />;
     } else {
         return (
-            <TreeItem key={curStr} nodeId={curStr} label={curStr}>
+            <StyledTreeItem
+                nodeId={curStr}
+                labelText={curStr}
+                labelIcon={FolderIcon}
+                labelInfo={docList.length}
+                color="#fff"
+                bgColor="#00395D"
+            >
                 {docList.map(doc => dfs(doc, docTree))}
-            </TreeItem>
+            </StyledTreeItem>
         );
     }
 }
@@ -38,12 +58,15 @@ function buildComponents(docTree, classes) {
 export default function NestedList({ docFileData, docTree }) {
     const classes = useStyles();
     return (
-        <TreeView
-            className={classes.root}
-            defaultCollapseIcon={<ExpandMore />}
-            defaultExpandIcon={<ChevronRight />}
-        >
-            {buildComponents(docTree, classes)}
-        </TreeView>
+        <>
+            <TreeView
+                className={classes.root}
+                defaultCollapseIcon={<ArrowDropDownIcon />}
+                defaultExpandIcon={<ArrowRightIcon />}
+                defaultEndIcon={<div style={{ width: 24 }} />}
+            >
+                {buildComponents(docTree, classes)}
+            </TreeView>
+        </>
     );
 }
