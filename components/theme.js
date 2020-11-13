@@ -7,7 +7,7 @@ const theme = createMuiTheme({
       main: '#FFF',
     },
     secondary: {
-      main: '#00395D',
+      main: '#0076B6',
     },
     error: {
       main: red.A400,
@@ -16,11 +16,12 @@ const theme = createMuiTheme({
       default: '#FFF',
     },
   },
-  // typography: {
-  //   fontFamily: [
-  //     'Expert Sans Light',
-  //     'Roboto',
-  //   ].join(','),
-  // }
+  typography: {
+    // fontFamily: [
+    //   'Expert Sans Light',
+    //   'Roboto',
+    // ].join(','),
+    fontSize:16
+  }
 });
 export default theme;

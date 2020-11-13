@@ -10,19 +10,20 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import Label from '@material-ui/icons/Label';
 import FolderIcon from '@material-ui/icons/Folder';
 import { Link } from '@material-ui/core';
+import LensIcon from '@material-ui/icons/Lens';
 const useStyles = makeStyles((theme) => ({
 
-    color: theme.palette.text.secondary,
-    '&:hover > $content': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    '&:focus > $content, &$selected > $content': {
-        backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
-        color: 'var(--tree-view-color)',
-    },
-    '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label': {
-        backgroundColor: 'transparent',
-    },
+    // color: theme.palette.text.secondary,
+    // '&:hover > $content': {
+    //     backgroundColor: theme.palette.action.hover,
+    // },
+    // '&:focus > $content, &$selected > $content': {
+    //     backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
+    //     color: 'var(--tree-view-color)',
+    // },
+    // '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label': {
+    //     backgroundColor: 'transparent',
+    // },
 }));
 
 function dfs(curStr, docTree, docFileData, level) {
@@ -38,7 +39,6 @@ function dfs(curStr, docTree, docFileData, level) {
         if(!labelText) {
             labelText = curStr;
         }
-        console.log("labelText:", labelText);
         return (
             <Link href={`/docs/${noExt}`}>
                     <StyledTreeItem
@@ -46,9 +46,9 @@ function dfs(curStr, docTree, docFileData, level) {
                         nodeId={noExt}
                         spacing={level+2}
                         labelText={labelText}
-                        labelIcon={DescriptionOutlinedIcon}
-                        color="#fff"
-                        bgColor="#00395D"
+                        bullet
+                        color="#0076B6"
+                        bgColor="#fff"
                     />
             </Link>
         );
@@ -59,10 +59,9 @@ function dfs(curStr, docTree, docFileData, level) {
                 nodeId={noExt}
                 spacing={level+2}
                 labelText={curStr}
-                labelIcon={FolderIcon}
                 labelInfo={docList.length + ""}
-                color="#fff"
-                bgColor="#00395D"
+                color="#0076B6"
+                bgColor="#fff"
             >
                 {docList.map(doc => dfs(doc, docTree, docFileData, level+1))}
             </StyledTreeItem>
@@ -87,7 +86,7 @@ export default function NestedList({ docFileData, docTree, curDoc }) {
                 defaultExpanded={Object.keys(docTree)}
                 defaultCollapseIcon={<ArrowDropDownIcon />}
                 defaultExpandIcon={<ArrowRightIcon />}
-                defaultEndIcon={<div style={{ width: 24 }} />}
+                // defaultEndIcon={<div style={{ width: 24 }} />}
             >
                 {buildComponents(docTree, classes, docFileData)}
             </TreeView>

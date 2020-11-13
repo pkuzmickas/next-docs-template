@@ -19,16 +19,16 @@ export default function Content({ docData, pageTitle, text, curDoc }) {
         <main className={classes.content}>
             <Toolbar />
             <Container maxWidth="lg">
-                <Grid container spacing={10}>
-                    <Grid item xs={3}>
+                <Grid container spacing={5}>
+                    <Grid item xs={4}>
                         <SideNav docData={docData} curDoc={curDoc} />
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={8}>
                         <Grid container>
-                            <Grid item xs={12}>
+                            <Grid item>
                                 <SearchBar />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item>
                                 <h1>{pageTitle}</h1>
                                 <Typography>
                                     {text}

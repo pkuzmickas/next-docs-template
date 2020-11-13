@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
 
-let spacing = 0;
-
 const useTreeItemStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.text.secondary,
@@ -30,17 +28,13 @@ const useTreeItemStyles = makeStyles((theme) => ({
       fontWeight: theme.typography.fontWeightRegular,
     },
   },
-  group: {
-    marginLeft: 0,
-    '& $content': {
-      paddingLeft: theme.spacing(spacing),
-    },
-  },
   expanded: {},
   selected: {},
   label: {
     fontWeight: 'inherit',
     color: 'inherit',
+   
+
   },
   labelRoot: {
     display: 'flex',
@@ -53,24 +47,30 @@ const useTreeItemStyles = makeStyles((theme) => ({
   labelText: {
     fontWeight: 'inherit',
     flexGrow: 1,
+    fontSize: "16px",
   },
+  bullet: {
+    position: "absolute",
+    left: "-14px",
+    top: "3px"
+  }
 }));
 
 
 export function StyledTreeItem(props) {
-  console.log("labelText StyledTreeItem:",props.labelText)
-  if(props.spacing) {
-    console.log("spacing received:", props.spacing)
-    spacing = props.spacing;
-  }
   const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
-
+  const { labelText, labelInfo, color, bgColor, ...other } = props;
+  let bullet;
+  if(props.bullet) {
+    bullet = <div className={classes.bullet}>•</div>;
+  } else {
+    bullet = <></>
+  }
   return (
     <TreeItem
       label={
         <div className={classes.labelRoot}>
-          <LabelIcon color="inherit" className={classes.labelIcon} />
+          {bullet}
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
           </Typography>
@@ -88,7 +88,6 @@ export function StyledTreeItem(props) {
         content: classes.content,
         expanded: classes.expanded,
         selected: classes.selected,
-        group: classes.group,
         label: classes.label,
       }}
       {...other}
@@ -99,7 +98,6 @@ export function StyledTreeItem(props) {
 StyledTreeItem.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
-  labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
 };
