@@ -4,9 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { Container, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +16,13 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  separator: {
+    marginRight: "15px",
+    height: "100%",
+    width: "15px",
+    height: "30px",
+    borderRight: "1px solid black"
+  }
 }));
 
 export default function Header() {
@@ -30,10 +34,13 @@ export default function Header() {
           <Container maxWidth="lg">
 
             <Toolbar>
+              <img src="/logo.png" width="180" alt="my image" />
+              <div className={classes.separator}></div>
               <Typography variant="h6" className={classes.title}>
                 Leet Documentation
             </Typography>
               <Button variant="contained" color="secondary">Docs</Button>
+              <Button color="inherit">API</Button>
               <Button color="inherit">About</Button>
             </Toolbar>
           </Container>

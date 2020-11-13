@@ -92,9 +92,11 @@ export function getHierarchyTree(docList=null) {
         docList = getDocs();
     }
     const hierarchyTree = {};
+    const parentTree = {};
     docList.forEach(doc => {
         const hierarchy = getDocHierarchy(doc);
         const fileName = path.basename(doc);
+        const slug = fileName.replace(/\.mdx/, '')
         let lastNode = "root";
         hierarchy.forEach(node => {
             if(!hierarchyTree[lastNode]) {
@@ -103,12 +105,14 @@ export function getHierarchyTree(docList=null) {
             if(!hierarchyTree[node]) {
                 hierarchyTree[lastNode].push(node);
             }
+            parentTree[node] = lastNode;
             lastNode = node;
         })
         if(!hierarchyTree[lastNode]) {
             hierarchyTree[lastNode] = [];
         }
-        hierarchyTree[lastNode].push(fileName);
+        hierarchyTree[lastNode].push(slug);
+        parentTree[slug] = lastNode;
     });
-    return hierarchyTree;
+    return {hierarchyTree, parentTree};
 }

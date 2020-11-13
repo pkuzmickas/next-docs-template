@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function dfs(curStr, docTree, docFileData, level) {
-    const docList = docTree[curStr];
+    const docList = docTree.hierarchyTree[curStr];
     const noExt = curStr.replace(/\.mdx/, "");
 
     // There are no more children
@@ -46,7 +46,7 @@ function dfs(curStr, docTree, docFileData, level) {
                         nodeId={noExt}
                         spacing={level+2}
                         labelText={labelText}
-                        bullet
+                        bullet="true"
                         color="#0076B6"
                         bgColor="#fff"
                     />
@@ -71,22 +71,31 @@ function dfs(curStr, docTree, docFileData, level) {
 
 function buildComponents(docTree, classes, docFileData) {
     if (!docTree) return;
-    const docList = docTree["root"];
+    const docList = docTree.hierarchyTree["root"];
     return docList?.map(doc => dfs(doc, docTree, docFileData, 0));
 }
 
 export default function NestedList({ docFileData, docTree, curDoc }) {
     const classes = useStyles();
-    console.log("default selected:", curDoc?.slug);
+    const selected = curDoc?.slug;
+    let expandedList = [];
+    if(selected) {
+        let curNode = selected;
+        while(curNode!=="root") {
+            expandedList.push(curNode);
+            curNode = docTree.parentTree[curNode];
+        }
+    }
+
     return (
         <>
             <TreeView
                 className={classes.root}
-                defaultSelected={curDoc?.slug}
-                defaultExpanded={Object.keys(docTree)}
+                selected={expandedList}
+                defaultExpanded={expandedList}
                 defaultCollapseIcon={<ArrowDropDownIcon />}
                 defaultExpandIcon={<ArrowRightIcon />}
-                // defaultEndIcon={<div style={{ width: 24 }} />}
+                defaultEndIcon={<div style={{ width: 24 }} />}
             >
                 {buildComponents(docTree, classes, docFileData)}
             </TreeView>
