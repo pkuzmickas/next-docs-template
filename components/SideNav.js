@@ -3,17 +3,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import NestedList from './NestedList';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+root: {
     backgroundColor: theme.palette.background.paper,
   },
 }));
 
-export default function SideNav({ docData }) {
+export default function SideNav({ docData, curDoc }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-        <NestedList docTree={docData.docTree}></NestedList>
+        <NestedList curDoc={curDoc} docFileData={docData.docFileData} docTree={docData.docTree}></NestedList>
     </div>
   );
 }

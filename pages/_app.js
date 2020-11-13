@@ -6,13 +6,6 @@ import PropTypes from 'prop-types';
 import theme from '../components/theme';
 import Header from 'components/Header';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-
-}));
-
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -21,7 +14,6 @@ function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
-  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -35,9 +27,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Header></Header>
-        <div className={classes.root}>
-          <Component {...pageProps} />
-        </div>
+        <Component {...pageProps} />
       </ThemeProvider>
     </React.Fragment>
   );

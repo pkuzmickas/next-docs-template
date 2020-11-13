@@ -4,11 +4,12 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import { GmailTreeView, StyledTreeItem} from "components/StyledTreeItem";
+import { GmailTreeView, StyledTreeItem } from "components/StyledTreeItem";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import Label from '@material-ui/icons/Label';
 import FolderIcon from '@material-ui/icons/Folder';
+import { Link } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
 
     color: theme.palette.text.secondary,
@@ -24,48 +25,71 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function dfs(curStr, docTree) {
+function dfs(curStr, docTree, docFileData, level) {
     const docList = docTree[curStr];
+    const noExt = curStr.replace(/\.mdx/, "");
+
     // There are no more children
     if (!docList) {
-        return <StyledTreeItem
-            nodeId={curStr}
-            labelText={curStr}
-            labelIcon={DescriptionOutlinedIcon}
-        />;
+        let labelText;
+        if(docFileData[noExt]) {
+            labelText = docFileData[noExt].frontMatter.title;
+        }
+        if(!labelText) {
+            labelText = curStr;
+        }
+        console.log("labelText:", labelText);
+        return (
+            <Link href={`/docs/${noExt}`}>
+                    <StyledTreeItem
+                        key={curStr}
+                        nodeId={noExt}
+                        spacing={level+2}
+                        labelText={labelText}
+                        labelIcon={DescriptionOutlinedIcon}
+                        color="#fff"
+                        bgColor="#00395D"
+                    />
+            </Link>
+        );
     } else {
         return (
             <StyledTreeItem
-                nodeId={curStr}
+                key={curStr}
+                nodeId={noExt}
+                spacing={level+2}
                 labelText={curStr}
                 labelIcon={FolderIcon}
-                labelInfo={docList.length}
+                labelInfo={docList.length + ""}
                 color="#fff"
                 bgColor="#00395D"
             >
-                {docList.map(doc => dfs(doc, docTree))}
+                {docList.map(doc => dfs(doc, docTree, docFileData, level+1))}
             </StyledTreeItem>
         );
     }
 }
 
-function buildComponents(docTree, classes) {
+function buildComponents(docTree, classes, docFileData) {
     if (!docTree) return;
     const docList = docTree["root"];
-    return docList?.map(doc => dfs(doc, docTree));
+    return docList?.map(doc => dfs(doc, docTree, docFileData, 0));
 }
 
-export default function NestedList({ docFileData, docTree }) {
+export default function NestedList({ docFileData, docTree, curDoc }) {
     const classes = useStyles();
+    console.log("default selected:", curDoc?.slug);
     return (
         <>
             <TreeView
                 className={classes.root}
+                defaultSelected={curDoc?.slug}
+                defaultExpanded={Object.keys(docTree)}
                 defaultCollapseIcon={<ArrowDropDownIcon />}
                 defaultExpandIcon={<ArrowRightIcon />}
                 defaultEndIcon={<div style={{ width: 24 }} />}
             >
-                {buildComponents(docTree, classes)}
+                {buildComponents(docTree, classes, docFileData)}
             </TreeView>
         </>
     );

@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Content({ docData, pageTitle, text }) {
+export default function Content({ docData, pageTitle, text, curDoc }) {
     const classes = useStyles();
     return (
         <main className={classes.content}>
@@ -21,7 +21,7 @@ export default function Content({ docData, pageTitle, text }) {
             <Container maxWidth="lg">
                 <Grid container spacing={10}>
                     <Grid item xs={3}>
-                        <SideNav docData={docData} />
+                        <SideNav docData={docData} curDoc={curDoc} />
                     </Grid>
                     <Grid item xs={9}>
                         <Grid container>

@@ -69,13 +69,15 @@ export function findDoc(docBaseName) {
 export function getDocData() {
     const docList = getDocs();
     const docTree = getHierarchyTree(docList);
-    const docFileData = docList.map((doc) => {
+    let docFileData = {};
+    docList.forEach((doc) => {
       const fileContents = fs.readFileSync(doc, 'utf8')
       const fileName = path.basename(doc);
+      const slug = fileName.replace(/\.mdx/, '')
       const hierarchy = getDocHierarchy(doc);
       const {content, data} = matter(fileContents);
-      return {
-        slug: fileName.replace(/\.mdx/, ''),
+      docFileData[slug] = {
+        slug,
         content,
         frontMatter:data,
         hierarchy,

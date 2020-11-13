@@ -4,15 +4,17 @@ import path from "path";
 import { getDocs, getDocData } from "utils/get-docs";
 import SideBar from "components/SideBar";
 import Content from "components/Content";
+import { CssBaseline } from "@material-ui/core";
 
 const root = process.cwd();
 
-export default function DocPost({ mdxSource, frontMatter, docData }) {
+export default function DocPost({ mdxSource, frontMatter, docData, curDoc }) {
   const content = hydrate(mdxSource);
   return (
     <>
-      <SideBar docData={docData.docTree}></SideBar>
-      <Content pageTitle={frontMatter.title} text={content}></Content>
+      {/* <SideBar docData={docData.docTree}></SideBar> */}
+      <CssBaseline></CssBaseline>
+      <Content curDoc={curDoc} docData={docData} pageTitle={frontMatter.title} text={content}></Content>
     </>
   );
 }
@@ -30,7 +32,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const docData = getDocData();
-  const curDoc = docData.docFileData.find(doc => doc.slug === params.slug);
+  const curDoc = docData.docFileData[params.slug];
   const mdxSource = await renderToString(curDoc.content);
-  return { props: { mdxSource, frontMatter: curDoc.frontMatter, docData } };
+  return { props: { mdxSource, frontMatter: curDoc.frontMatter, docData, curDoc } };
 }
