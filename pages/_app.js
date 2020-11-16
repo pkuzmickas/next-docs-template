@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import theme from '../components/theme';
 import Header from 'components/Header';
+import 'styles/prism-theme.css';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {

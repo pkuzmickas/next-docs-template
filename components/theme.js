@@ -21,7 +21,7 @@ const theme = createMuiTheme({
     //   'Expert Sans Light',
     //   'Roboto',
     // ].join(','),
-    fontSize:16
+    fontSize:14
   }
 });
 export default theme;
