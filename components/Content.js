@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(8),
     },
+    text: {
+        fontSize: "16px!important"
+    }
 }));
 
 export default function Content({ docData, pageTitle, text, curDoc }) {
@@ -36,13 +39,11 @@ export default function Content({ docData, pageTitle, text, curDoc }) {
                                 <SearchBar />
                             </Grid>
                             <Grid item>
-                                {/* <h1>{pageTitle}</h1> */}
-                                <Typography>
+                                <div className={classes.text}>
                                     <MDXProvider components={components}>
                                         {text}
                                     </MDXProvider>
-                                    {/* {text} */}
-                                </Typography>
+                                </div>
                             </Grid>
                         </Grid>
                     </Grid>

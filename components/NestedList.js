@@ -29,42 +29,56 @@ const useStyles = makeStyles((theme) => ({
 function dfs(curStr, docTree, docFileData, level) {
     const docList = docTree.hierarchyTree[curStr];
     const noExt = curStr.replace(/\.mdx/, "");
-
     // There are no more children
     if (!docList) {
         let labelText;
-        if(docFileData[noExt]) {
-            labelText = docFileData[noExt].frontMatter.title;
+        if (docFileData[curStr]) {
+            labelText = docFileData[curStr].frontMatter.title;
         }
-        if(!labelText) {
+        if (!labelText) {
             labelText = curStr;
         }
         return (
             <Link href={`/docs/${noExt}`}>
-                    <StyledTreeItem
-                        key={curStr}
-                        nodeId={noExt}
-                        spacing={level+2}
-                        labelText={labelText}
-                        bullet="true"
-                        color="#0076B6"
-                        bgColor="#fff"
-                    />
+                <StyledTreeItem
+                    key={curStr}
+                    nodeId={curStr}
+                    spacing={level + 2}
+                    labelText={labelText}
+                    bullet="true"
+                    color="#0076B6"
+                    bgColor="#fff"
+                />
             </Link>
         );
     } else {
-        return (
+        const treeItem = (
             <StyledTreeItem
                 key={curStr}
-                nodeId={noExt}
-                spacing={level+2}
+                nodeId={curStr}
+                spacing={level + 2}
                 labelText={curStr}
                 labelInfo={docList.length + ""}
                 color="#0076B6"
                 bgColor="#fff"
             >
-                {docList.map(doc => dfs(doc, docTree, docFileData, level+1))}
+                {docList.map(doc => dfs(doc, docTree, docFileData, level + 1))}
             </StyledTreeItem>
+        );
+        let finalTreeItem;
+        if (docFileData[curStr]) {
+            finalTreeItem = (
+                <Link href={`/docs/${noExt}`}>
+                    {treeItem}
+                </Link>
+            )
+        } else {
+            finalTreeItem = treeItem
+        }
+        return (
+            <>
+            {finalTreeItem}
+            </>
         );
     }
 }
@@ -77,16 +91,19 @@ function buildComponents(docTree, classes, docFileData) {
 
 export default function NestedList({ docFileData, docTree, curDoc }) {
     const classes = useStyles();
-    const selected = curDoc?.slug;
+    const selected = curDoc?.fileName;
     let expandedList = [];
-    if(selected) {
+    if (selected) {
         let curNode = selected;
-        while(curNode!=="root") {
+        while (curNode !== "root") {
             expandedList.push(curNode);
             curNode = docTree.parentTree[curNode];
+            if(!curNode) {
+                console.warn("Parent tree ruined. Unable to parse tree hierarchy for side navigation.");
+                break;
+            }
         }
     }
-
     return (
         <>
             <TreeView

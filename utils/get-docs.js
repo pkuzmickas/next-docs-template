@@ -9,13 +9,13 @@ const contentExt = ".mdx";
 function findAllDocFiles(dir) {
     let results = [];
     const list = fs.readdirSync(dir);
-    list.forEach(function(file) {
+    list.forEach(function (file) {
         file = dir + '/' + file;
         const stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) { 
+        if (stat && stat.isDirectory()) {
             /* Recurse into a subdirectory */
             results = results.concat(findAllDocFiles(file));
-        } else { 
+        } else {
             /* Is a file */
             results.push(file);
         }
@@ -42,17 +42,17 @@ export function getDocs() {
 
 function searchForDoc(dir, docBaseName) {
     const list = fs.readdirSync(dir);
-    
+
     for (let i = 0; i < list.length; i++) {
         let file = list[i];
-        if(file === docBaseName + contentExt) {
+        if (file === docBaseName + contentExt) {
             return dir + '/' + file;
         }
         file = dir + '/' + file;
         const stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) { 
+        if (stat && stat.isDirectory()) {
             let result = searchForDoc(file, docBaseName);
-            if(result!==null) {
+            if (result !== null) {
                 return result;
             }
         }
@@ -71,24 +71,28 @@ export function getDocData() {
     const docTree = getHierarchyTree(docList);
     let docFileData = {};
     docList.forEach((doc) => {
-      const fileContents = fs.readFileSync(doc, 'utf8')
-      const fileName = path.basename(doc);
-      const slug = fileName.replace(/\.mdx/, '')
-      const hierarchy = getDocHierarchy(doc);
-      const {content, data} = matter(fileContents);
-      docFileData[slug] = {
-        slug,
-        content,
-        frontMatter:data,
-        hierarchy,
-        pathToDoc: hierarchy.join("/")
-      }
+        const fileContents = fs.readFileSync(doc, 'utf8')
+        let fileName = path.basename(doc);
+        const hierarchy = getDocHierarchy(doc);
+        if (fileName === "index.mdx") {
+            if (hierarchy.length - 1 >= 0) {
+                fileName = hierarchy[hierarchy.length - 1];
+            }
+        }
+        const slug = fileName.replace(/\.mdx/, '')
+        const { content, data } = matter(fileContents);
+        docFileData[fileName] = {
+            fileName,
+            slug,
+            content,
+            frontMatter: data,
+        }
     })
-    return {docFileData, docTree};
+    return { docFileData, docTree };
 }
 
-export function getHierarchyTree(docList=null) {
-    if(docList===null) {
+export function getHierarchyTree(docList = null) {
+    if (docList === null) {
         docList = getDocs();
     }
     const hierarchyTree = {};
@@ -96,23 +100,25 @@ export function getHierarchyTree(docList=null) {
     docList.forEach(doc => {
         const hierarchy = getDocHierarchy(doc);
         const fileName = path.basename(doc);
-        const slug = fileName.replace(/\.mdx/, '')
-        let lastNode = "root";
-        hierarchy.forEach(node => {
-            if(!hierarchyTree[lastNode]) {
+        if (fileName !== "index.mdx") {
+            const slug = fileName.replace(/\.mdx/, '')
+            let lastNode = "root";
+            hierarchy.forEach(node => {
+                if (!hierarchyTree[lastNode]) {
+                    hierarchyTree[lastNode] = [];
+                }
+                if (!hierarchyTree[node]) {
+                    hierarchyTree[lastNode].push(node);
+                }
+                parentTree[node] = lastNode;
+                lastNode = node;
+            })
+            if (!hierarchyTree[lastNode]) {
                 hierarchyTree[lastNode] = [];
             }
-            if(!hierarchyTree[node]) {
-                hierarchyTree[lastNode].push(node);
-            }
-            parentTree[node] = lastNode;
-            lastNode = node;
-        })
-        if(!hierarchyTree[lastNode]) {
-            hierarchyTree[lastNode] = [];
+            hierarchyTree[lastNode].push(fileName);
+            parentTree[fileName] = lastNode;
         }
-        hierarchyTree[lastNode].push(slug);
-        parentTree[slug] = lastNode;
     });
-    return {hierarchyTree, parentTree};
+    return { hierarchyTree, parentTree };
 }
