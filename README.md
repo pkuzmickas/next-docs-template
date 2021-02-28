@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# next-docs-template
+
+Starting point when making a NextJS MDX (MarkdownJSX) Documentation website for your project.
+
+Uses next-mdx-remote to load MDX files.
+
+Dynamically loads MDX files from the _content_ folder. If you put files in folders, creates folders in the navigation. 
+
+![image](https://user-images.githubusercontent.com/15807240/109431296-b7aa2500-79fd-11eb-81f1-c5fbef018e19.png)
+
+
 
 ## Getting Started
 
